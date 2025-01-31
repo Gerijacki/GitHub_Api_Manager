@@ -33,7 +33,7 @@ class Menu:
             if opcion == "1":
                 self.ver_usuario()
             elif opcion == "2":
-                self.gestionar_repos()
+                self.gestionar_repo()
             elif opcion == "3":
                 self.gestionar_organizaciones()
             elif opcion == "4":
@@ -56,147 +56,114 @@ class Menu:
 
     # ================== GESTIÓN DE REPOSITORIOS ================== #
     
-    def gestionar_repos(self):
+    def gestionar_repo(self):
+
         while True:
             self.clear_screen()
-            print("\n==== GESTIÓN DE REPOSITORIOS ====")
-            print("1. Listar mis repositorios")
-            print("2. Crear un nuevo repositorio")
-            print("3. Eliminar un repositorio")
-            print("4. Volver al menú principal")
+            print(f"\n=== Gestión del Repositorio {repo_name} ===")
+            print("1. Crear un repositorio")
+            print("2. Eliminar un repositorio")
+            print("3. Crear una nueva rama")
+            print("4. Eliminar una rama")
+            print("5. Fusionar dos ramas")
+            print("6. Crear un pull request")
+            print("7. Listar pull requests")
+            print("8. Hacer merge a un pull request")
+            print("9. Cerrar un pull request sin merge")
+            print("10. Agregar un colaborador")
+            print("11. Listar colaboradores")
+            print("12. Volver al menú principal")
 
             opcion = input("\nSelecciona una opción: ")
 
             if opcion == "1":
-                self.listar_repos()
+                nombre = input("Nombre del nuevo repositorio: ")
+                privado = input("¿Privado? (s/n): ").lower() == "s"
+                descripcion = input("Descripción del repositorio: ")
+                response = self.repo_manager.create_repo(nombre, privado, descripcion)
+                print("\n✅ Repositorio creado exitosamente.") if "id" in response else print("\n❌ Error al crear el repositorio.")
+
             elif opcion == "2":
-                self.crear_repo()
+                repo_name = input("Nombre del repositorio a eliminar: ")
+                confirm = input("Estas seguro que quieres eliminar el repositorio? (s/n)")
+                if (confirm.lower() == "s"):
+                    if self.repo_manager.delete_repo(repo_name):
+                        print("\n✅ Repositorio eliminado.")
+                    else:
+                        print("\n❌ Error al eliminar el repositorio.")
+                else:
+                    print('Acció cancelada!')
+
             elif opcion == "3":
-                self.eliminar_repo()
+                repo_name = input("Nombre del repositorio: ")
+                new_branch = input("Nombre de la nueva rama: ")
+                base_branch = input("Rama base (por defecto 'main'): ") or "main"
+                response = self.repo_manager.create_branch(repo_name, new_branch, base_branch)
+                print(response)
+
             elif opcion == "4":
-                break
-            else:
-                print("\nOpción inválida.")
+                repo_name = input("Nombre del repositorio: ")
+                branch_name = input("Nombre de la rama a eliminar: ")
+                if self.repo_manager.delete_branch(repo_name, branch_name):
+                    print("\n✅ Rama eliminada correctamente.")
+                else:
+                    print("\n❌ Error al eliminar la rama.")
 
-            self.pause()
-
-    def listar_repos(self):
-        repos = self.github.list_repos()
-        print("\n=== Mis Repositorios ===")
-        for repo in repos:
-            print(f"- {repo['name']} ({'Privado' if repo['private'] else 'Público'})")
-
-    def crear_repo(self):
-        nombre = input("Nombre del nuevo repositorio: ")
-        privado = input("¿Privado? (s/n): ").lower() == "s"
-        response = self.github.create_repo(nombre, privado)
-        if "id" in response:
-            print("\n✅ Repositorio creado exitosamente.")
-        else:
-            print("\n❌ Error al crear el repositorio.")
-
-    def eliminar_repo(self):
-        nombre = input("Nombre del repositorio a eliminar: ")
-        if self.repo_manager.delete_repo(nombre):
-            print("\n✅ Repositorio eliminado.")
-        else:
-            print("\n❌ Error al eliminar el repositorio.")
-
-    # ================== GESTIÓN DE ORGANIZACIONES ================== #
-
-    def gestionar_organizaciones(self):
-        while True:
-            self.clear_screen()
-            print("\n==== GESTIÓN DE ORGANIZACIONES ====")
-            print("1. Listar mis organizaciones")
-            print("2. Ver detalles de una organización")
-            print("3. Listar miembros de una organización")
-            print("4. Añadir miembro a una organización")
-            print("5. Eliminar miembro de una organización")
-            print("6. Listar repositorios de una organización")
-            print("7. Crear un repositorio en una organización")
-            print("8. Volver al menú principal")
-
-            opcion = input("\nSelecciona una opción: ")
-
-            if opcion == "1":
-                self.listar_orgs()
-            elif opcion == "2":
-                self.ver_detalles_org()
-            elif opcion == "3":
-                self.listar_miembros_org()
-            elif opcion == "4":
-                self.agregar_miembro_org()
             elif opcion == "5":
-                self.eliminar_miembro_org()
+                repo_name = input("Nombre del repositorio: ")
+                base = input("Rama base (destino del merge): ")
+                head = input("Rama a fusionar (origen del merge): ")
+                response = self.repo_manager.merge_branches(repo_name, base, head)
+                print(response)
+
             elif opcion == "6":
-                self.listar_repos_org()
+                repo_name = input("Nombre del repositorio: ")
+                title = input("Título del PR: ")
+                head = input("Rama de origen: ")
+                base = input("Rama de destino (por defecto 'main'): ") or "main"
+                body = input("Descripción del PR: ")
+                response = self.repo_manager.create_pull_request(repo_name, title, head, base, body)
+                print(response)
+
             elif opcion == "7":
-                self.crear_repo_org()
+                repo_name = input("Nombre del repositorio: ")
+                prs = self.repo_manager.list_pull_requests(repo_name)
+                print("\n=== Pull Requests Abiertos ===")
+                for pr in prs:
+                    print(f"- #{pr['number']} {pr['title']} ({pr['state']})")
+
             elif opcion == "8":
+                repo_name = input("Nombre del repositorio: ")
+                pr_number = input("Número del PR a fusionar: ")
+                response = self.repo_manager.merge_pull_request(repo_name, pr_number)
+                print(response)
+
+            elif opcion == "9":
+                repo_name = input("Nombre del repositorio: ")
+                pr_number = input("Número del PR a cerrar: ")
+                response = self.repo_manager.close_pull_request(repo_name, pr_number)
+                print(response)
+
+            elif opcion == "10":
+                repo_name = input("Nombre del repositorio: ")
+                collaborator = input("Usuario a agregar: ")
+                permission = input("Permiso (pull/push/admin): ")
+                if self.repo_manager.add_collaborator(repo_name, collaborator, permission):
+                    print("\n✅ Colaborador agregado correctamente.")
+                else:
+                    print("\n❌ Error al agregar colaborador.")
+
+            elif opcion == "11":
+                repo_name = input("Nombre del repositorio: ")
+                collaborators = self.repo_manager.list_collaborators(repo_name)
+                print("\n=== Colaboradores del Repositorio ===")
+                for collaborator in collaborators:
+                    print(f"- {collaborator['login']} ({collaborator['permissions']})")
+
+            elif opcion == "12":
                 break
+
             else:
                 print("\nOpción inválida.")
 
             self.pause()
-
-    def listar_orgs(self):
-        orgs = self.org_manager.list_orgs()
-        print("\n=== Mis Organizaciones ===")
-        for org in orgs:
-            print(f"- {org['login']}")
-
-    def ver_detalles_org(self):
-        org_name = input("Nombre de la organización: ")
-        details = self.org_manager.get_org_details(org_name)
-        print(details)
-
-    def listar_miembros_org(self):
-        org_name = input("Nombre de la organización: ")
-        members = self.org_manager.list_org_members(org_name)
-        print("\n=== Miembros de la Organización ===")
-        for member in members:
-            print(f"- {member['login']}")
-
-    def agregar_miembro_org(self):
-        org_name = input("Nombre de la organización: ")
-        username = input("Usuario a agregar: ")
-        role = input("Rol (member/admin): ")
-        response = self.org_manager.add_member_to_org(org_name, username, role)
-        print(response)
-
-    def eliminar_miembro_org(self):
-        org_name = input("Nombre de la organización: ")
-        username = input("Usuario a eliminar: ")
-        if self.org_manager.remove_member_from_org(org_name, username):
-            print("✅ Usuario eliminado correctamente.")
-        else:
-            print("❌ Error al eliminar usuario.")
-
-    def listar_repos_org(self):
-        org_name = input("Nombre de la organización: ")
-        repos = self.org_manager.list_org_repos(org_name)
-        print("\n=== Repositorios de la Organización ===")
-        for repo in repos:
-            print(f"- {repo['name']} ({'Privado' if repo['private'] else 'Público'})")
-
-    def crear_repo_org(self):
-        org_name = input("Nombre de la organización: ")
-        repo_name = input("Nombre del nuevo repositorio: ")
-        privado = input("¿Privado? (s/n): ").lower() == "s"
-        response = self.org_manager.create_org_repo(org_name, repo_name, privado)
-        print(response)
-
-    # ================== ESTADÍSTICAS ================== #
-
-    def ver_stats_repo(self):
-        owner = input("Usuario/Organización dueña del repo: ")
-        repo = input("Nombre del repositorio: ")
-        stats = self.stats_manager.get_repo_stats(owner, repo)
-        print("\n=== Estadísticas de Contribuyentes ===")
-        if isinstance(stats, list):
-            for contributor in stats:
-                print(f"- {contributor['author']['login']}: {contributor['total']} contribuciones")
-        else:
-            print("\n❌ No hay datos disponibles aún.")
-
