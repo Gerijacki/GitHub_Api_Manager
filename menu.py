@@ -39,7 +39,7 @@ class Menu:
             elif opcion == "4":
                 self.ver_stats_repo()
             elif opcion == "5":
-                print("\Sortint...")
+                print("Sortint...")
                 sys.exit()
             else:
                 print("\nOpció invàlida.")
@@ -151,7 +151,7 @@ class Menu:
                     print(f'⛓️‍💥 URL: {response.get('html_url')} ')
                     print(f'👁️ BODY: {response.get('body')} ')
                 else:
-                    print
+                    print("❌ Error en crear la PR.")
 
             elif opcion == "7":
                 repo_name = input("Nom del repo: ")
