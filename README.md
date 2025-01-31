@@ -1,2 +1,6 @@
-# github_cli
-Aplicació per administrar totes les interaccións de git (amb github) de manera automatitzada i personalitzada per terminal
+# GitHub Manager - CLI
+
+Una aplicación de terminal para gestionar GitHub desde la línea de comandos.
+
+## Instalación
+pip install -r requirements.txt
