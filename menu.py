@@ -1,4 +1,3 @@
-import os
 import sys
 from github import GitHub
 from modules.repoManager import RepoManager
@@ -7,6 +6,7 @@ from modules.statsManager import StatsManager
 from modules.orgMenu import OrgMenu
 from modules.repoMenu import RepoMenu
 from modules.statsMenu import StatsMenu
+from modules.utils import clear_screen, pause, print_error, print_info, print_success, print_warning
 
 class Menu:
     def __init__(self):
@@ -18,21 +18,15 @@ class Menu:
         self.stats_menu = StatsMenu(self.stats_manager)
         self.repo_menu = RepoMenu(self.repo_manager)
 
-    def clear_screen(self):
-        os.system("cls" if os.name == "nt" else "clear")
-
-    def pause(self):
-        input("Prem Enter per continuar...")
-
     def mostrar_menu(self):
         while True:
-            self.clear_screen()
+            clear_screen()
             print("\n==== GESTOR DE GITHUB ====")
-            print("1. Veure informació de l'usuari")
-            print("2. Gestionar Repos")
-            print("3. Gestionar Organitzacions")
-            print("4. Veure estadístiques d'un repositori")
-            print("5. Salir")
+            print_info("1. Veure informació de l'usuari")
+            print_info("2. Gestionar Repos")
+            print_info("3. Gestionar Organitzacions")
+            print_info("4. Veure estadístiques d'un repositori")
+            print_info("5. Salir")
 
             opcion = input("\nSel·lecciona una opció: ")
 
@@ -45,30 +39,30 @@ class Menu:
             elif opcion == "4":
                 self.stats_menu.ver_stats_repo()
             elif opcion == "5":
-                print("Sortint...")
+                print_warning("Sortint...")
                 sys.exit()
             else:
-                print("\nOpció invàlida.")
+                print_error("\nOpció invàlida.")
 
-            self.pause()
+            pause()
 
     def ver_usuario(self):
         user = self.github.get_user()
-        print("\n=== Informació de l'usuari ===")
-        print(f"👤 Nom d'usuari: {user.get('login')}")
-        print(f"📛 Nom complet: {user.get('name', 'No disponible')}")
-        print(f"📍 Ubicació: {user.get('location', 'No disponible')}")
-        print(f"📧 Correu electrònic: {user.get('email', 'No disponible')}")
-        print(f"🏢 Empresa: {user.get('company', 'No disponible')}")
-        print(f"🌐 Blog: {user.get('blog', 'No disponible')}")
-        print(f"🐦 Twitter: @{user.get('twitter_username', 'No disponible')}")
-        print(f"📖 Biografia: {user.get('bio', 'No disponible')}")
-        print(f"📅 Data de creació: {user.get('created_at')}")
-        print(f"🔄 Última actualització: {user.get('updated_at')}")
-        print(f"📂 Repositoris públics: {user.get('public_repos')}")
-        print(f"🔒 Repositoris privats: {user.get('total_private_repos')}")
-        print(f"⭐ Seguidors: {user.get('followers')}")
-        print(f"👥 Seguint: {user.get('following')}")
-        print(f"📦 Espai d'emmagatzematge usat: {user.get('disk_usage')} KB")
-        print(f"🔗 Perfil de GitHub: {user.get('html_url')}")
-        print(f"🖼 Avatar: {user.get('avatar_url')}")
+        print_info("\n=== Informació de l'usuari ===")
+        print_info(f"👤 Nom d'usuari: {user.get('login')}")
+        print_info(f"📛 Nom complet: {user.get('name', 'No disponible')}")
+        print_info(f"📍 Ubicació: {user.get('location', 'No disponible')}")
+        print_info(f"📧 Correu electrònic: {user.get('email', 'No disponible')}")
+        print_info(f"🏢 Empresa: {user.get('company', 'No disponible')}")
+        print_info(f"🌐 Blog: {user.get('blog', 'No disponible')}")
+        print_info(f"🐦 Twitter: @{user.get('twitter_username', 'No disponible')}")
+        print_info(f"📖 Biografia: {user.get('bio', 'No disponible')}")
+        print_info(f"📅 Data de creació: {user.get('created_at')}")
+        print_info(f"🔄 Última actualització: {user.get('updated_at')}")
+        print_info(f"📂 Repositoris públics: {user.get('public_repos')}")
+        print_info(f"🔒 Repositoris privats: {user.get('total_private_repos')}")
+        print_info(f"⭐ Seguidors: {user.get('followers')}")
+        print_info(f"👥 Seguint: {user.get('following')}")
+        print_info(f"📦 Espai d'emmagatzematge usat: {user.get('disk_usage')} KB")
+        print_info(f"🔗 Perfil de GitHub: {user.get('html_url')}")
+        print_info(f"🖼 Avatar: {user.get('avatar_url')}")

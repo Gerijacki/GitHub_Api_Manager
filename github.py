@@ -14,11 +14,3 @@ class GitHub:
         response = requests.get(f"{self.BASE_URL}/user", headers=self.headers)
         return response.json()
 
-    def list_repos(self):
-        response = requests.get(f"{self.BASE_URL}/user/repos", headers=self.headers)
-        return response.json()
-
-    def create_repo(self, name, private=True):
-        data = {"name": name, "private": private}
-        response = requests.post(f"{self.BASE_URL}/user/repos", json=data, headers=self.headers)
-        return response.json()
