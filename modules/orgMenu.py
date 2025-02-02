@@ -123,5 +123,13 @@ def crear_repo_org(self):
     org_name = input_info("Nom de l'org: ")
     repo_name = input_info("Nom del nou repo: ")
     privado = input_info("Privat? (s/n): ").lower() == "s"
-    response = self.org_manager.create_org_repo(org_name, repo_name, privado)
-    print_info(response)
+    crear_readme = input_info("Vols incloure un README al repositori? (s/n): ").lower() == "s"
+    crear_privacy_policy = input_info("Vols incloure la política de privacitat? (s/n): ").lower() == "s"
+    crear_terms_of_service = input_info("Vols incloure la política d'usos? (s/n): ").lower() == "s"
+
+    response = self.org_manager.create_org_repo(org_name, repo_name, privado, crear_readme, crear_privacy_policy, crear_terms_of_service)
+    if ("id" in response):
+        print_success("Repo creat satisfactòriament.")
+        print_success(f'🌐 URL: {response.get('html_url')}')
+    else:
+        print_error("Error al crear el repositori.")

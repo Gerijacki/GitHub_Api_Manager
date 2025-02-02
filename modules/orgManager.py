@@ -39,8 +39,18 @@ class OrgManager(GitHub):
         response = requests.get(f"{self.BASE_URL}/orgs/{org_name}/repos", headers=self.headers)
         return response.json()
 
-    def create_org_repo(self, org_name, repo_name, private=True):
-        """Crea un nuevo repositorio en la organización."""
-        data = {"name": repo_name, "private": private}
+    def create_org_repo(self, org_name, repo_name, private=True, create_readme=False, create_privacy_policy=False, create_terms_of_service=False):
+        """Crea un nou repositori en l'organització amb fitxers opcionals."""
+        data = {
+            "name": repo_name,
+            "private": private,
+            "auto_init": create_readme, 
+        }
+        if create_privacy_policy:
+            data["license_template"] = "mit"
+            
+        if create_terms_of_service:
+            data["has_issues"] = True
+
         response = requests.post(f"{self.BASE_URL}/orgs/{org_name}/repos", json=data, headers=self.headers)
         return response.json()
