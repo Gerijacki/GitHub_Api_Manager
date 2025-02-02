@@ -1,4 +1,4 @@
-from github import GitHub
+from Github import GitHub
 import requests
 
 class OrgManager(GitHub):
