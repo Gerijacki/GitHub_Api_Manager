@@ -1,4 +1,4 @@
-from Github import GitHub
+from src.Github import GitHub
 import requests
 
 class StatsManager(GitHub):

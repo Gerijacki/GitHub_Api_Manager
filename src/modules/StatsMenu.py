@@ -1,4 +1,4 @@
-from modules.Utils import print_warning, print_error, print_info, print_success, clear_screen, pause, input_warning, input_info
+from src.modules.Utils import print_warning, print_error, print_info, print_success, clear_screen, pause, input_warning, input_info
 
 class StatsMenu:
     def __init__(self, stats_manager):

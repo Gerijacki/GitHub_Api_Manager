@@ -1,4 +1,4 @@
-from modules.Utils import print_warning, print_error, print_info, print_success, clear_screen, pause, input_warning, input_info
+from src.modules.Utils import print_warning, print_error, print_info, print_success, clear_screen, pause, input_warning, input_info
 
 class OrgMenu:
     def __init__(self, gestor_orgs):
@@ -6,10 +6,10 @@ class OrgMenu:
         self.opcions_menu = {
             "1": self.llistar_orgs,
             "2": self.veure_detalls_org,
-            "3": self.llistar_membres_org,
-            "4": self.afegir_membre_org,
-            "5": self.eliminar_membre_org,
-            "6": self.llistar_repos_org,
+            "3": self.llistar_repos_org,
+            "4": self.llistar_membres_org,
+            "5": self.afegir_membre_org,
+            "6": self.eliminar_membre_org,
             "7": self.crear_repo_org,
             "8": self.sortir
         }

@@ -1,5 +1,5 @@
 import unittest
-from github import GitHub
+from src.Github import GitHub
 
 class TestGitHub(unittest.TestCase):
     def setUp(self):

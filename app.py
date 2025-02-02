@@ -1,6 +1,6 @@
 import sys
-from menu import Menu
-from modules.Utils import print_warning
+from src.menu import Menu
+from src.modules.Utils import print_warning
 
 if __name__ == "__main__":
     try:

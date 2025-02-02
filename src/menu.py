@@ -1,12 +1,12 @@
 import sys
-from Github import GitHub
-from modules.RepoManager import RepoManager
-from modules.OrgManager import OrgManager
-from modules.StatsManager import StatsManager
-from modules.OrgMenu import OrgMenu
-from modules.RepoMenu import RepoMenu
-from modules.StatsMenu import StatsMenu
-from modules.Utils import clear_screen, pause, print_error, print_info, print_success, print_warning
+from src.Github import GitHub
+from src.modules.RepoManager import RepoManager
+from src.modules.OrgManager import OrgManager
+from src.modules.StatsManager import StatsManager
+from src.modules.OrgMenu import OrgMenu
+from src.modules.RepoMenu import RepoMenu
+from src.modules.StatsMenu import StatsMenu
+from src.modules.Utils import clear_screen, pause, print_error, print_info, print_success, print_warning
 
 class Menu:
     def __init__(self):

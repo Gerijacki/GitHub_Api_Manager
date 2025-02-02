@@ -1,5 +1,5 @@
 import requests
-from config import GITHUB_TOKEN
+from src.config import GITHUB_TOKEN
 
 class GitHub:
     BASE_URL = "https://api.github.com"

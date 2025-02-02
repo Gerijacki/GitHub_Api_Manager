@@ -1,22 +1,23 @@
-from modules.Utils import print_warning, print_error, print_info, print_success, clear_screen, pause, input_warning, input_info
+from src.modules.Utils import print_warning, print_error, print_info, print_success, clear_screen, pause, input_warning, input_info
 
 class RepoMenu:
     def __init__(self, gestor_repos):
         self.gestor_repos = gestor_repos
         self.opcions_menu = {
-            "1": self.crear_repositori,
-            "2": self.eliminar_repositori,
-            "3": self.llistar_branques,
-            "4": self.crear_branques,
-            "5": self.eliminar_branques,
-            "6": self.fusionar_branques,
-            "7": self.crear_pull_request,
+            "1": self.llistar_repositoris,
+            "2": self.crear_repositori,
+            "3": self.eliminar_repositori,
+            "4": self.llistar_branques,
+            "5": self.crear_branques,
+            "6": self.eliminar_branques,
+            "7": self.fusionar_branques,
             "8": self.llistar_pull_requests,
-            "9": self.fer_merge_pull_request,
-            "10": self.tancar_pull_request,
-            "11": self.afegir_colaborador,
+            "9": self.crear_pull_request,
+            "10": self.fer_merge_pull_request,
+            "11": self.tancar_pull_request,
             "12": self.llistar_colaboradors,
-            "13": self.sortir
+            "13": self.afegir_colaborador,
+            "14": self.sortir
         }
 
     def gestionar_repo(self):
@@ -48,10 +49,51 @@ class RepoMenu:
             print_success(f'🌐 URL: {resposta.get("html_url")}')
         else:
             print_error("Error al crear el repositori.")
+    
+    def llistar_repositoris(self):
+        """Llistar repos (propietari o col·laborador)"""
+        repos = self.gestor_repos.list_repos()
+
+        if isinstance(repos, dict) and "error" in repos:
+            print_error(f"Error obtenint repos: {repos['error']}")
+            return
+
+        repos_filtrats = [repo for repo in repos if repo.get("permissions", {}).get("push", False)]
+
+        if repos_filtrats:
+            print_info("\n=== Repositoris del teu compte ===")
+            for idx, repo in enumerate(repos_filtrats, 1):
+                tipus = "🔒 Privat" if repo["private"] else "🌍 Públic"
+                print_info(f"{idx}. {repo['name']} ({tipus})")
+        else:
+            print_error("No s'han trobat repositoris propietaris o editables.")
+
+
+
+    def seleccionar_repositori(self):
+        """Seleccionar un repositori del llistat"""
+        repos = self.gestor_repos.list_repos()
+        if repos:
+            print_info("\nSelecciona un repositori:")
+            for idx, repo in enumerate(repos, 1):
+                print_info(f"{idx}. {repo['name']}")
+            
+            try:
+                seleccio = int(input_info("\nIntrodueix el número del repositori: "))
+                if 1 <= seleccio <= len(repos):
+                    selected_repo = repos[seleccio - 1]
+                    print_success(f"Repositori seleccionat: {selected_repo['name']}")
+                    return selected_repo['name']
+                else:
+                    print_error("Selecció no vàlida.")
+            except ValueError:
+                print_error("Selecciona un número vàlid.")
+        else:
+            print_error("No s'han trobat repositoris.")
 
     def eliminar_repositori(self):
         """Eliminar un repositori"""
-        nom_repo = input_info("Nom del repo a eliminar: ")
+        nom_repo = self.seleccionar_repositori()
         confirmacio = input_warning("Estàs segur? (s/n): ")
         if confirmacio.lower() == "s":
             if self.gestor_repos.delete_repo(nom_repo):
@@ -63,7 +105,7 @@ class RepoMenu:
 
     def llistar_branques(self):
         """Llistar branques d'un repositori"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         branques = self.gestor_repos.list_branches(nom_repo)
         if branques:
             print_info("\n=== Branques del repositori ===")
@@ -74,7 +116,7 @@ class RepoMenu:
 
     def crear_branques(self):
         """Crear una nova branca"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         nova_branque = input_info("Nom de la nova branca: ")
         branca_base = input_info("Branca base (per defecte 'main'): ") or "main"
 
@@ -86,7 +128,7 @@ class RepoMenu:
 
     def eliminar_branques(self):
         """Eliminar una branca"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         nom_branque = input_warning("Nom de la branca a eliminar: ")
         confirmacio = input_warning(f"Eliminar la branca {nom_branque}? (s/n): ")
         if confirmacio.lower() == "s":
@@ -99,7 +141,7 @@ class RepoMenu:
 
     def fusionar_branques(self):
         """Fusionar dues branques"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         head = input_info("Branca origen: ")
         base = input_info("Branca destí: ")
         resposta = self.gestor_repos.merge_branches(nom_repo, base, head)
@@ -113,7 +155,7 @@ class RepoMenu:
 
     def crear_pull_request(self):
         """Crear una pull request"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         titol = input_info("Títol de la PR: ")
         head = input_info("Branca d'origen: ")
         base = input_info("Branca de destí (per defecte 'main'): ") or "main"
@@ -129,7 +171,7 @@ class RepoMenu:
 
     def llistar_pull_requests(self):
         """Llistar pull requests obertes"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         prs = self.gestor_repos.list_pull_requests(nom_repo)
         print_info("\n=== Pull Requests Obertes ===")
         for pr in prs:
@@ -137,7 +179,7 @@ class RepoMenu:
 
     def fer_merge_pull_request(self):
         """Fer merge d'una pull request"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         pr_number = input_info("Número de la PR a fusionar: ")
         resposta = self.gestor_repos.merge_pull_request(nom_repo, pr_number)
 
@@ -148,7 +190,7 @@ class RepoMenu:
 
     def tancar_pull_request(self):
         """Tancar una pull request sense merge"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         pr_number = input_info("Número de la PR a tancar: ")
         resposta = self.gestor_repos.close_pull_request(nom_repo, pr_number)
 
@@ -160,7 +202,7 @@ class RepoMenu:
 
     def afegir_colaborador(self):
         """Afegir un col·laborador"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         col·laborador = input_info("Usuari a afegir: ")
         permís = input_info("Permisos (pull/push/admin): ")
 
@@ -171,7 +213,7 @@ class RepoMenu:
 
     def llistar_colaboradors(self):
         """Llistar col·laboradors del repo"""
-        nom_repo = input_info("Nom del repo: ")
+        nom_repo = self.seleccionar_repositori()
         col·laboradors = self.gestor_repos.list_collaborators(nom_repo)
         print_info("\n=== Col·laboradors ===")
         for col·laborador in col·laboradors:

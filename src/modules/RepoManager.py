@@ -1,4 +1,4 @@
-from Github import GitHub
+from src.Github import GitHub
 import requests
 
 class RepoManager(GitHub):
@@ -106,3 +106,15 @@ class RepoManager(GitHub):
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}/branches"
         return self._handle_request("GET", url)
+    
+    def list_repos(self):
+        """Llista només els repositoris on l'usuari autenticat és propietari o col·laborador amb permisos d'edició"""
+        url = f"{self.BASE_URL}/user/repos"
+        params = {
+            "per_page": 100,
+            "affiliation": "owner,collaborator"
+        }
+        return self._handle_request("GET", url, params=params)
+
+
+
