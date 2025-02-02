@@ -36,15 +36,14 @@ class RepoMenu:
                     input_info("Vols afegir una llicència? (s/n): ").lower() == "s"
                 )
 
-                response = self.repo_manager.create_repo(
-                    nombre, privado, descripcion, crear_readme, crear_licencia
-                )
-
-                (
+                response = self.repo_manager.create_repo(nombre, privado, descripcion, crear_readme, crear_licencia)
+                
+                if ("id" in response):
                     print_success("Repo creat satisfactòriament.")
-                    if "id" in response
-                    else print_error("Error al crear el repositori.")
-                )
+                    print_success(f'🌐 URL: {response.get('html_url')}')
+                else:
+                    print_error("Error al crear el repositori.")
+                
 
             elif opcion == "2":
                 repo_name = input_info("Nom del repo a eliminar: ")
@@ -79,10 +78,28 @@ class RepoMenu:
 
             elif opcion == "5":
                 repo_name = input_info("Nom del repo: ")
-                base = input_info("Branca base (destí del merge): ")
-                head = input_info("Branca a fusionar (origen del merge): ")
+                head = input_info("Branca origen: ")
+                base = input_info("Branca destí: ")
+                
                 response = self.repo_manager.merge_branches(repo_name, base, head)
                 print(response)
+                if response.get('message'):
+                    print_success(f'Merge completat de {head} cap a {base}')
+                    print_success(f'🌐 URL: {response.get('html_url')}')
+                    print_success(f'🚀 Commit message: {response.get('message')}')
+                    
+                    eliminar_branca = input("Vols eliminar la branca d'origen? (s/n): ").strip().lower()
+                    
+                    if eliminar_branca == 's':
+                        if self.repo_manager.delete_branch(repo_name, head):
+                            print_success(f'Branca {head} eliminada amb èxit!')
+                        else:
+                            print_error(f'No es va poder eliminar la branca {head}.')
+                    else:
+                        print_info("La branca d'origen no es vol eliminar.")
+                else:
+                    print_error('Hi ha hagut algun error. Verifica a github.com l\'estat del merge')
+
 
             elif opcion == "6":
                 repo_name = input_info("Nom del repo: ")
@@ -96,9 +113,9 @@ class RepoMenu:
                 if response.get("number"):
                     print_success("PR generada correctament.")
                     print_info("\n=== Detalls de la PR ===")
-                    print_info(f"🆔 ID: {response.get('number')} ")
-                    print_info(f"⛓️‍💥 URL: {response.get('html_url')} ")
-                    print_info(f"👁️ BODY: {response.get('body')} ")
+                    print_info(f" 🆔 ID: {response.get('number')} ")
+                    print_info(f" ⛓️‍💥 URL: {response.get('html_url')} ")
+                    print_info(f" 👁️ BODY: {response.get('body')} ")
                 else:
                     print_error("Error en crear la PR.")
 
@@ -113,13 +130,20 @@ class RepoMenu:
                 repo_name = input_info("Nom del repo: ")
                 pr_number = input_info("Número de la PR a fusionar: ")
                 response = self.repo_manager.merge_pull_request(repo_name, pr_number)
-                print(response)
+                if(response.get('merged') == True):
+                    print_success(f'Pull request merged')
+                else:
+                    print_error(f'Error al tancar la Pull Request')
 
             elif opcion == "9":
                 repo_name = input_info("Nom del repo: ")
                 pr_number = input_warning("Número de la PR a tancar: ")
                 response = self.repo_manager.close_pull_request(repo_name, pr_number)
-                print(response)
+                if (response.get('html_url')):
+                    print_success(f'Pull request tancada correctament')
+                    print_success(f' 🌐 URL: {response.get('html_url')}')
+                else:
+                    print_error('Error al tancar la PR')
 
             elif opcion == "10":
                 repo_name = input_info("Nom del repo: ")

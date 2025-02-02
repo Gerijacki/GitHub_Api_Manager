@@ -22,16 +22,16 @@ def print_info(message):
     print(f"{Utils.INFO} {message}{Utils.RESET}")
 
 def input_success(message):
-    return input(f"{Utils.SUCCESS}[ ✔ ] {message}: {Utils.RESET}")
+    return input(f"{Utils.SUCCESS}[ ✔ ] {message}{Utils.RESET}")
 
 def input_error(message):
-    return input(f"{Utils.ERROR}[ ✖ ] {message}: {Utils.RESET}")
+    return input(f"{Utils.ERROR}[ ✖ ] {message}{Utils.RESET}")
 
 def input_warning(message):
-    return input(f"{Utils.WARNING}[ ⚠ ] {message}: {Utils.RESET}")
+    return input(f"{Utils.WARNING}[ ⚠ ] {message}{Utils.RESET}")
 
 def input_info(message):
-    return input(f"{Utils.INFO} {message}: {Utils.RESET}")
+    return input(f"{Utils.INFO} {message}{Utils.RESET}")
 
 # ================== UTILIDADES GENERALES ================== #
 def clear_screen():
