@@ -11,16 +11,17 @@ class RepoMenu:
             print_info(f"\n=== Gestio dels repositoris ===")
             print_info("1. Crear un repositori")
             print_info("2. Eliminar un repositori")
-            print_info("3. Crear una nova branca")
-            print_info("4. Eliminar una branca")
-            print_info("5. Fusionar dues branca")
-            print_info("6. Crear una pull request")
-            print_info("7. Llistar pull requests")
-            print_info("8. Fer merge d'una pull request")
-            print_info("9. Tancar una pull request sense merge")
-            print_info("10. Afegir un col·laborador")
-            print_info("11. Llistar col·laboradors")
-            print_info("12. Tornar al menú principal")
+            print_info("3. Llistar branques")
+            print_info("4. Crear una nova branca")
+            print_info("5. Eliminar una branca")
+            print_info("6. Fusionar dues branca")
+            print_info("7. Crear una pull request")
+            print_info("8. Llistar pull requests")
+            print_info("9. Fer merge d'una pull request")
+            print_info("10. Tancar una pull request sense merge")
+            print_info("11. Afegir un col·laborador")
+            print_info("12. Llistar col·laboradors")
+            print_info("13. Tornar al menú principal")
 
             opcion = input_info("\nSel·lecciona una opció: ")
 
@@ -55,8 +56,18 @@ class RepoMenu:
                         print_error("Error en eliminar el repo.")
                 else:
                     print_warning("Acció abortada!")
-
+            
             elif opcion == "3":
+                repo_name = input_info("Nom del repo: ")
+                branches = self.repo_manager.list_branches(repo_name)
+                if branches:
+                    print_info("\n=== Branques del repositori ===")
+                    for branch in branches:
+                        print_info(f"- {branch['name']}")
+                else:
+                    print_error("No s'han trobat branques o hi ha un error en recuperar-les.")
+
+            elif opcion == "4":
                 repo_name = input_info("Nom del repo: ")
                 new_branch = input_info("Nom de la nova branca: ")
                 base_branch = input_info("Branca base (per defecte 'main'): ") or "main"
@@ -68,15 +79,18 @@ class RepoMenu:
                 else:
                     print_error("Error al generar la branca")
 
-            elif opcion == "4":
+            elif opcion == "5":
                 repo_name = input_info("Nom del repo: ")
                 branch_name = input_warning("Nom de la branca a eliminar: ")
-                if self.repo_manager.delete_branch(repo_name, branch_name):
-                    print_success("Branca eliminada correctament.")
+                confirm = input_warning(f'Segur que vols eliminar la branca {branch_name}? (s/n)')
+                if (confirm.lower() == "s"):
+                    if self.repo_manager.delete_branch(repo_name, branch_name):
+                        print_success("Branca eliminada correctament.")
+                    else:
+                        print_error("Error en eliminar la branca.")
                 else:
-                    print_error("Error en eliminar la branca.")
-
-            elif opcion == "5":
+                    print_warning('Acció abortada')
+            elif opcion == "6":
                 repo_name = input_info("Nom del repo: ")
                 head = input_info("Branca origen: ")
                 base = input_info("Branca destí: ")
@@ -101,7 +115,7 @@ class RepoMenu:
                     print_error('Hi ha hagut algun error. Verifica a github.com l\'estat del merge')
 
 
-            elif opcion == "6":
+            elif opcion == "7":
                 repo_name = input_info("Nom del repo: ")
                 title = input_info("Títol de la PR: ")
                 head = input_info("Branca d'origen: ")
@@ -119,14 +133,14 @@ class RepoMenu:
                 else:
                     print_error("Error en crear la PR.")
 
-            elif opcion == "7":
+            elif opcion == "8":
                 repo_name = input("Nom del repo: ")
                 prs = self.repo_manager.list_pull_requests(repo_name)
                 print_info("\n=== Pull Requests Obertes ===")
                 for pr in prs:
                     print_info(f"- #{pr['number']} {pr['title']} ({pr['state']})")
 
-            elif opcion == "8":
+            elif opcion == "9":
                 repo_name = input_info("Nom del repo: ")
                 pr_number = input_info("Número de la PR a fusionar: ")
                 response = self.repo_manager.merge_pull_request(repo_name, pr_number)
@@ -135,7 +149,7 @@ class RepoMenu:
                 else:
                     print_error(f'Error al tancar la Pull Request')
 
-            elif opcion == "9":
+            elif opcion == "10":
                 repo_name = input_info("Nom del repo: ")
                 pr_number = input_warning("Número de la PR a tancar: ")
                 response = self.repo_manager.close_pull_request(repo_name, pr_number)
@@ -145,7 +159,7 @@ class RepoMenu:
                 else:
                     print_error('Error al tancar la PR')
 
-            elif opcion == "10":
+            elif opcion == "11":
                 repo_name = input_info("Nom del repo: ")
                 collaborator = input_info("Usuari a afegir: ")
                 permission = input_info("Permisos (pull/push/admin): ")
@@ -156,14 +170,14 @@ class RepoMenu:
                 else:
                     print_error("Error en afegir el col·laborador.")
 
-            elif opcion == "11":
+            elif opcion == "12":
                 repo_name = input_info("Nom del repo: ")
                 collaborators = self.repo_manager.list_collaborators(repo_name)
                 print_info("\n=== Col·laboradors del repo ===")
                 for collaborator in collaborators:
                     print_info(f"- {collaborator['login']} ({collaborator['permissions']})")
 
-            elif opcion == "12":
+            elif opcion == "13":
                 break
 
             else:

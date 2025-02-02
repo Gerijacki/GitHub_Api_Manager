@@ -121,3 +121,14 @@ class RepoManager(GitHub):
     def set_collaborator_permissions(self, repo_name, collaborator, permission):
         """Modifica els permisos d'un col·laborador dins d'un repo."""
         return self.add_collaborator(repo_name, collaborator, permission)
+    
+    def list_branches(self, repo_name):
+        """Llista les branques d'un repositori."""
+        username = self.get_user().get("login", "")
+        url = f"{self.BASE_URL}/repos/{username}/{repo_name}/branches"
+        response = requests.get(url, headers=self.headers)
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return [] 
