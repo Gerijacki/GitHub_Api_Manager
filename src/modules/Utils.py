@@ -38,4 +38,4 @@ def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
 def pause():
-    input("Presiona Enter para continuar...")
+    input_warning("Presiona Enter para continuar...")

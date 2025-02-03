@@ -18,16 +18,28 @@ class RepoManager(GitHub):
     
     def create_repo(self, repo_name, private=True, description="", add_readme=False, add_license=False):
         """Crea un nou repositori de GitHub."""
+        if not repo_name.strip():
+            return {"error": "El nom del repositori no pot estar buit."}
+        
         url = f"{self.BASE_URL}/user/repos"
-        data = {"name": repo_name, "private": private, "description": description}
+        data = {
+            "name": repo_name, 
+            "private": private, 
+            "description": description
+        }
+        
         if add_readme:
-            data["has_issues"] = True
+            data["auto_init"] = True
         if add_license:
             data["license_template"] = "mit"
+        
         return self._handle_request("POST", url, json=data)
     
     def delete_repo(self, repo_name):
         """Elimina un repositori de GitHub."""
+        if not repo_name.strip():
+            return {"error": "El nom del repositori no pot estar buit."}
+        
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}"
         response = self._handle_request("DELETE", url)
@@ -35,6 +47,9 @@ class RepoManager(GitHub):
 
     def create_branch(self, repo_name, new_branch, base_branch="main"):
         """Crea una nova branca."""
+        if not new_branch.strip() or not base_branch.strip():
+            return {"error": "Els noms de les branques no poden estar buits."}
+        
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}/git/refs/heads/{base_branch}"
         base_branch_data = self._handle_request("GET", url)
@@ -49,13 +64,16 @@ class RepoManager(GitHub):
     
     def delete_branch(self, repo_name, branch_name):
         """Elimina una branca."""
+        if not branch_name.strip():
+            return {"error": "El nom de la branca no pot estar buit."}
+        
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}/git/refs/heads/{branch_name}"
         response = self._handle_request("DELETE", url)
         return response.get("message") == "Not Found" or response == {}
     
     def merge_branches(self, repo_name, base, head):
-        """Fusiona dues branques."""
+        """Fusiona dues branques."""      
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}/merges"
         data = {"base": base, "head": head, "commit_message": f"Merge {head} into {base}"}
@@ -63,6 +81,9 @@ class RepoManager(GitHub):
     
     def create_pull_request(self, repo_name, title, head, base="main", body=""):
         """Crea una nova pull request."""
+        if not title.strip() or not head.strip() or not base.strip():
+            return {"error": "Tots els camps són obligatoris per crear una PR."}
+        
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}/pulls"
         data = {"title": title, "head": head, "base": base, "body": body}
@@ -76,12 +97,18 @@ class RepoManager(GitHub):
     
     def merge_pull_request(self, repo_name, pr_number):
         """Fusiona una pull request."""
+        if not pr_number.isdigit():
+            return {"error": "Número de PR invàlid."}
+        
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}/pulls/{pr_number}/merge"
         return self._handle_request("PUT", url)
     
     def close_pull_request(self, repo_name, pr_number):
         """Tanca una pull request."""
+        if not pr_number.isdigit():
+            return {"error": "Número de PR invàlid."}
+        
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}/pulls/{pr_number}"
         data = {"state": "closed"}
@@ -89,6 +116,9 @@ class RepoManager(GitHub):
     
     def add_collaborator(self, repo_name, collaborator, permission="push"):
         """Afegeix un col·laborador."""
+        if not collaborator.strip():
+            return {"error": "El nom del col·laborador no pot estar buit."}
+        
         username = self.get_user().get("login", "")
         url = f"{self.BASE_URL}/repos/{username}/{repo_name}/collaborators/{collaborator}"
         data = {"permission": permission}
@@ -115,6 +145,3 @@ class RepoManager(GitHub):
             "affiliation": "owner,collaborator"
         }
         return self._handle_request("GET", url, params=params)
-
-
-

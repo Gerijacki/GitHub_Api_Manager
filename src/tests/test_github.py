@@ -5,7 +5,7 @@ from src.Github import GitHub
 class TestGitHub(unittest.TestCase):
     def setUp(self):
         if not os.path.isfile('.env'):
-            self.skipTest("El archivo .env no se encuentra en la carpeta raíz del proyecto. Test omitido.")
+            self.skipTest("No tenim fitxer .env. Test skiped")
         
         self.github = GitHub()
 

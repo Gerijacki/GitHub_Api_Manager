@@ -9,6 +9,10 @@ class StatsMenu:
         owner = input_info("Propietari del repo: ")
         repo_name = input_info("Nom del repo: ")
 
+        if not owner or not repo_name:
+            print_warning("Nom del repositori o propietari no vàlid.")
+            return
+
         menu_options = {
             "1": self.mostrar_resum_repo,
             "2": self.mostrar_commits_recents,
@@ -36,6 +40,8 @@ class StatsMenu:
     def mostrar_resum_repo(self, owner, repo_name):
         """Resum general del repositori"""
         stats = self.stats_manager.get_repo_overview(owner, repo_name)
+        if stats is None:
+            return
         print_info("\n=== Resum del repo ===")
         for key, value in stats.items():
             print_info(f"{key}: {value}")
@@ -43,6 +49,9 @@ class StatsMenu:
     def mostrar_commits_recents(self, owner, repo_name):
         """Últims commits del repositori"""
         commits = self.stats_manager.get_repo_commits(owner, repo_name)
+        if not commits:
+            print_error("No s'han trobat commits recents.")
+            return
         print_info("\n=== Últims commits ===")
         for commit in commits[:15]:
             print_info(f"- {commit['commit']['message']} ({commit['commit']['author']['name']})")
@@ -50,6 +59,9 @@ class StatsMenu:
     def mostrar_branques_repo(self, owner, repo_name):
         """Branques del repositori"""
         branches = self.stats_manager.get_repo_branches(owner, repo_name)
+        if not branches:
+            print_error("No s'han trobat branques.")
+            return
         print_info("\n=== Branques del repo ===")
         for branch in branches:
             print_info(f"- {branch['name']}")
@@ -57,6 +69,9 @@ class StatsMenu:
     def mostrar_releases_repo(self, owner, repo_name):
         """Releases del repositori"""
         releases = self.stats_manager.get_repo_releases(owner, repo_name)
+        if not releases:
+            print_error("No s'han trobat releases.")
+            return
         print_info("\n=== Releases del repo ===")
         for release in releases:
             print_info(f"- {release['name']} (Tag: {release['tag_name']})")
@@ -64,6 +79,9 @@ class StatsMenu:
     def mostrar_issues_obertes(self, owner, repo_name):
         """Issues obertes del repositori"""
         issues = self.stats_manager.get_repo_issues(owner, repo_name)
+        if not issues:
+            print_error("No s'han trobat issues obertes.")
+            return
         print_info("\n=== Issues Obertes ===")
         for issue in issues:
             print_info(f"- #{issue['number']} {issue['title']} (Estat: {issue['state']})")
@@ -71,6 +89,9 @@ class StatsMenu:
     def mostrar_pull_requests(self, owner, repo_name):
         """Pull requests obertes del repositori"""
         prs = self.stats_manager.get_repo_pull_requests(owner, repo_name)
+        if not prs:
+            print_error("No s'han trobat pull requests obertes.")
+            return
         print_info("\n=== Pull Requests Obertes ===")
         for pr in prs:
             print_info(f"- #{pr['number']} {pr['title']} ({pr['state']})")

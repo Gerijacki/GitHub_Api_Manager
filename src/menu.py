@@ -22,11 +22,11 @@ class Menu:
         while True:
             clear_screen()
             print("\n==== GESTOR DE GITHUB ====")
-            print_info("1. Veure informació de l'usuari")
-            print_info("2. Gestionar Repos")
-            print_info("3. Gestionar Organitzacions")
-            print_info("4. Veure estadístiques d'un repositori")
-            print_info("5. Salir")
+            print_info("1. Veure informació de l'usuari [ 🚻 ]")
+            print_info("2. Gestionar Repos [ 💭 ]")
+            print_info("3. Gestionar Organitzacions [ 🗄️ ]")
+            print_info("4. Veure estadístiques d'un repositori [ 💱 ]")
+            print_info("5. Salir [ 🏳️ ]")
 
             opcion = input("\nSel·lecciona una opció: ")
 
