@@ -35,7 +35,7 @@ class Menu:
             elif opcion == "2":
                 self.repo_menu.gestionar_repo()
             elif opcion == "3":
-                self.org_menu.gestionar_organizaciones()
+                self.org_menu.gestionar_organitzacions()
             elif opcion == "4":
                 self.stats_menu.ver_stats_repo()
             elif opcion == "5":
