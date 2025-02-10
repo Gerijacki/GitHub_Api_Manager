@@ -253,10 +253,10 @@ class RepoMenu:
         """Afegir un col·laborador"""
         nom_repo = self.seleccionar_repositori()
         if nom_repo:
-            col·laborador = input_info("Usuari a afegir: ")
+            collaborador = input_info("Usuari a afegir: ")
             permís = input_info("Permisos (pull/push/admin): ")
 
-            if self.gestor_repos.add_collaborator(nom_repo, col·laborador, permís):
+            if self.gestor_repos.add_collaborator(nom_repo, collaborador, permís):
                 print_success("Col·laborador afegit correctament.")
             else:
                 print_error("Error en afegir el col·laborador.")
@@ -265,10 +265,10 @@ class RepoMenu:
         """Llistar col·laboradors del repo"""
         nom_repo = self.seleccionar_repositori()
         if nom_repo:
-            col·laboradors = self.gestor_repos.list_collaborators(nom_repo)
+            collaboradors = self.gestor_repos.list_collaborators(nom_repo)
             print_info("\n=== Col·laboradors ===")
-            for col·laborador in col·laboradors:
-                print_info(f"- {col·laborador['login']} ({col·laborador['permissions']})")
+            for collaborador in collaboradors:
+                print_info(f"- {collaborador['login']} ({collaborador['permissions']})")
 
     def sortir(self):
         """Sortir del menú"""
