@@ -24,6 +24,24 @@ python app.py
 
 Això iniciarà la interfície de línia de comandaments on podràs interactuar amb les funcionalitats de l'aplicació.
 
+## Docker
+També pots executar l'aplicació utilitzant Docker. Primer, assegura't de tenir Docker i Docker Compose instal·lats.
+
+Construir la imatge Docker
+
+```bash
+docker-compose build
+```
+
+Executar l'aplicació amb Docker
+
+```bash
+docker-compose up
+```
+
+Això iniciarà l'aplicació dins d'un contenidor Docker.
+
+
 ## Tests
 
 Per assegurar-te que l'aplicació funciona correctament, pots executar els tests unitats. Per a això, utilitzem la biblioteca `unittest`. Per executar-los, utilitza el següent comandament:
