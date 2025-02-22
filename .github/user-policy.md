@@ -2,7 +2,7 @@
 
 ## Introducció
 
-Aquesta política d'usuari descriu les normes i directrius per utilitzar l'aplicació **GitHub Manager - CLI**. En utilitzar aquesta aplicació, acceptes complir amb aquesta política.
+Aquesta política d'usuari descriu les normes i directrius per utilitzar l'aplicació **GitHub Api Manager**. En utilitzar aquesta aplicació, acceptes complir amb aquesta política.
 
 ## Ús Acceptable
 
