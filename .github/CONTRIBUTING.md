@@ -2,7 +2,7 @@
 
 ## Introduction
 
-First off, thank you for considering contributing to GitHub Manager - CLI! It's people like you that make this project great.
+First off, thank you for considering contributing to GitHub Api Manager! It's people like you that make this project great.
 
 ## How Can I Contribute?
 
