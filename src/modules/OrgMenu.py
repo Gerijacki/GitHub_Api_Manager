@@ -87,20 +87,24 @@ class OrgMenu:
             print_error(f"Error al llistar membres de l'organització: {str(e)}")
 
     def afegir_membre_org(self):
-        """Afegir membre a una organització"""
-        nom_org = input_info("Nom de l'org: ")
-        usuari = input_info("Usuari a afegir: ")
-        rol = input_info("Rol (membre/admin): ")
-
-        if rol not in ["membre", "admin"]:
-            print_error("Rol invàlid. Ha de ser 'membre' o 'admin'.")
-            return
+        """Afegir un membre a una organització de GitHub"""
         
+        nom_org = input_info("Nom de l'organització: ")
+        usuari = input_info("Nom d'usuari a afegir: ")
+        rol = input_info("Rol ('member' o 'admin'): ").lower()
+
+        if rol not in ["member", "admin"]:
+            print_error("Rol invàlid! Ha de ser 'member' o 'admin'.")
+            return
         try:
             resposta = self.OrgManager.add_member_to_org(nom_org, usuari, rol)
-            print_info(resposta)
+            
+            if resposta.get("status") == "success":
+                print_info(f"✅ L'usuari {usuari} s'ha afegit correctament a {nom_org} amb el rol '{rol}'.")
+            else:
+                print_warning(f"⚠️ No s'ha pogut afegir {usuari}. Resposta: {resposta}")
         except Exception as e:
-            print_error(f"Error en afegir membre a l'organització: {str(e)}")
+            print_error(f"❌ Error en afegir membre: {str(e)}")
 
     def eliminar_membre_org(self):
         """Eliminar membre d'una organització"""
