@@ -1,4 +1,4 @@
-# Contributing to GitHub Manager - CLI
+# Contributing to GitHub Api Manager
 
 ## Introduction
 
@@ -17,7 +17,7 @@ If you have an idea for a new feature or an improvement to an existing feature, 
 ### Submitting Pull Requests
 
 1. **Fork the repository**: Click the "Fork" button on the top right of the repository page.
-2. **Clone your fork**: `git clone https://github.com/your-username/github_cli.git`
+2. **Clone your fork**: `git clone https://github.com/your-username/repo-name.git`
 3. **Create a new branch**: `git checkout -b my-feature-branch`
 4. **Make your changes**: Implement your feature or bug fix.
 5. **Commit your changes**: `git commit -am 'Add new feature'`
