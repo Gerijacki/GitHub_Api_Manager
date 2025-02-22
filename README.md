@@ -1,4 +1,4 @@
-# GitHub Manager - CLI
+# GitHub Api Manager
 
 Una aplicació per gestionar GitHub des de la línia de comandaments. Aquesta aplicació et permet interactuar amb diversos aspectes de GitHub, com gestionar repositoris, organitzacions, membres, etc., directament des del terminal via l'api oficial de github.
 
