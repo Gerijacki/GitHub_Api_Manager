@@ -42,4 +42,4 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
-        tags: ghcr.io/gerijacki/gitHub_api_manager:latest
+        tags: ghcr.io/gerijacki/github_api_manager:latest
